@@ -70,7 +70,7 @@ public class TransferenciaDisassembler implements Disassemblable<TransferenciaIn
     }
 
     private void validarDataAgendada(TransferenciaInputDTO input) {
-        if(Objects.nonNull(input.getDataAgendada()) && input.getDataAgendada().isAfter(LocalDate.now())){
+        if(Objects.nonNull(input.getDataAgendada()) && input.getDataAgendada().isBefore(LocalDate.now())){
             throw new TransferenciaException(messageHelper.getMensagem("data.agendada.antiga"));
         }
     }
