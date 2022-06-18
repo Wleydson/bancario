@@ -1,4 +1,4 @@
-package br.com.wleydson.bancario.controller.conta.input;
+package br.com.wleydson.bancario.controller.transferencia.input;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +13,9 @@ public class TransferenciaInputDTO {
 
     @NotNull
     public String contaDestino;
+
+    @NotNull
+    public Long contaId;
 
     @NotNull
     public BigDecimal valor;

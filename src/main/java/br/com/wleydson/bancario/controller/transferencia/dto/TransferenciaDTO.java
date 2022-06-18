@@ -1,5 +1,6 @@
-package br.com.wleydson.bancario.controller.conta.dto;
+package br.com.wleydson.bancario.controller.transferencia.dto;
 
+import br.com.wleydson.bancario.controller.conta.dto.ParcelaDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

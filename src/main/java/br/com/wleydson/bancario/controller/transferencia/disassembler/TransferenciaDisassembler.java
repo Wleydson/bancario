@@ -1,7 +1,7 @@
-package br.com.wleydson.bancario.controller.conta.disassembler;
+package br.com.wleydson.bancario.controller.transferencia.disassembler;
 
 import br.com.wleydson.bancario.config.MessageHelper;
-import br.com.wleydson.bancario.controller.conta.input.TransferenciaInputDTO;
+import br.com.wleydson.bancario.controller.transferencia.input.TransferenciaInputDTO;
 import br.com.wleydson.bancario.enumerations.StatusParcelaEnum;
 import br.com.wleydson.bancario.exception.TransferenciaException;
 import br.com.wleydson.bancario.model.Parcela;

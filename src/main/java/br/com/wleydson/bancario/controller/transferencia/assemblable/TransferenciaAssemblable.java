@@ -1,7 +1,8 @@
-package br.com.wleydson.bancario.controller.conta.assemblable;
+package br.com.wleydson.bancario.controller.transferencia.assemblable;
 
+import br.com.wleydson.bancario.controller.conta.assemblable.ParcelaAssemblable;
 import br.com.wleydson.bancario.controller.conta.dto.ParcelaDTO;
-import br.com.wleydson.bancario.controller.conta.dto.TransferenciaDTO;
+import br.com.wleydson.bancario.controller.transferencia.dto.TransferenciaDTO;
 import br.com.wleydson.bancario.enumerations.StatusParcelaEnum;
 import br.com.wleydson.bancario.model.Parcela;
 import br.com.wleydson.bancario.model.Transferencia;
