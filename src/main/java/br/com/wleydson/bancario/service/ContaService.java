@@ -26,7 +26,7 @@ public class ContaService {
         return contaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(messageHelper.getMensagem("conta.nao.encontrada")));
     }
 
-    public Conta buscarContaPorNumero(String conta){
+    public Conta buscarContaAtivaPorNumero(String conta){
         return contaRepository.findByContaAndAtivoTrue(conta).orElseThrow(() -> new ResourceNotFoundException(messageHelper.getMensagem("conta.nao.encontrada")));
     }
 

@@ -56,4 +56,9 @@ public class Transferencia {
         this.dataCriacao = LocalDateTime.now();
         this.dataAtualizacao = LocalDateTime.now();
     }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.dataAtualizacao = LocalDateTime.now();
+    }
 }

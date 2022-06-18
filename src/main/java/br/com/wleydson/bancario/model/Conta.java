@@ -54,7 +54,7 @@ public class Conta {
         this.saldo = new BigDecimal(0);
     }
 
-    public void removeSaldo(BigDecimal valor){
+    public void subSaldo(BigDecimal valor){
         this.saldo = this.saldo.subtract(valor);
     }
 

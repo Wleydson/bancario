@@ -2,14 +2,17 @@ package br.com.wleydson.bancario.controller.conta;
 
 import br.com.wleydson.bancario.controller.conta.assemblable.SaldoAssemblable;
 import br.com.wleydson.bancario.controller.conta.assemblable.ContaAssemblable;
+import br.com.wleydson.bancario.controller.conta.assemblable.TransferenciaAssemblable;
 import br.com.wleydson.bancario.controller.conta.disassembler.TransferenciaDisassembler;
 import br.com.wleydson.bancario.controller.conta.dto.ContaDTO;
 import br.com.wleydson.bancario.controller.conta.disassembler.ContaDisassembler;
 import br.com.wleydson.bancario.controller.conta.dto.SaldoDTO;
+import br.com.wleydson.bancario.controller.conta.dto.TransferenciaDTO;
 import br.com.wleydson.bancario.controller.conta.input.ContaInputDTO;
 import br.com.wleydson.bancario.controller.conta.input.DepositoInputDTO;
 import br.com.wleydson.bancario.controller.conta.input.TransferenciaInputDTO;
 import br.com.wleydson.bancario.model.Conta;
+import br.com.wleydson.bancario.model.Transferencia;
 import br.com.wleydson.bancario.service.ContaService;
 import br.com.wleydson.bancario.service.TransferenciaService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class ContaController {
 
     private final ContaAssemblable contaAssemblable;
     private final SaldoAssemblable saldoAssemblable;
+    private final TransferenciaAssemblable transferenciaAssemblable;
 
     private final ContaDisassembler contaDisassembler;
     private final TransferenciaDisassembler transferenciaDisassembler;
@@ -40,10 +44,31 @@ public class ContaController {
         return new ResponseEntity(saldoAssemblable.toDTO(conta), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/transferir")
+    @PostMapping("/{id}/transferencia")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transferenciaEntreContas(@PathVariable Long id, @RequestBody @Valid TransferenciaInputDTO transferenciaInputDTO){
-        transferenciaService.transferir(id, transferenciaDisassembler.toEntity(transferenciaInputDTO));
+        Conta conta = contaService.buscarConta(id);
+        Conta contaDestino = contaService.buscarContaAtivaPorNumero(transferenciaInputDTO.getContaDestino());
+        transferenciaService.transferir(conta, contaDestino, transferenciaDisassembler.toEntity(transferenciaInputDTO));
+    }
+
+    @PostMapping("/transferencia/{transferenciaId}/reembolsar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transferenciaEntreContas(@PathVariable Long transferenciaId){
+        transferenciaService.cancelarTransferenciaPorId(transferenciaId);
+    }
+
+    @GetMapping("/{id}/transferencia")
+    public ResponseEntity<List<TransferenciaDTO>> buscarTransferenciaPorConta(@PathVariable Long id){
+        Conta conta = contaService.buscarContaAtiva(id);
+        List<Transferencia> transferencias = transferenciaService.buscarTransferencias(conta);
+        return new ResponseEntity(transferenciaAssemblable.toDTOList(transferencias), HttpStatus.OK);
+    }
+
+    @GetMapping("/transferencia/{id}")
+    public ResponseEntity<List<TransferenciaDTO>> buscarTransferenciaPorId(@PathVariable Long id){
+        Transferencia transferencia = transferenciaService.buscarTransferenciaPorId(id);
+        return new ResponseEntity(transferenciaAssemblable.toDTO(transferencia), HttpStatus.OK);
     }
 
     @GetMapping
