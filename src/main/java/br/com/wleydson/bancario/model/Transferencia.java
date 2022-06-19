@@ -2,7 +2,6 @@ package br.com.wleydson.bancario.model;
 
 import br.com.wleydson.bancario.enumerations.StatusTransferenciaEnum;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Entity
 @Table(name = "transferencias")
 public class Transferencia {

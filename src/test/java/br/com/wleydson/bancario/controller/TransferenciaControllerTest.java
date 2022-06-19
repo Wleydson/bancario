@@ -35,12 +35,12 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     @Order(1)
     @DisplayName("Deve realizar transferencia entre contas com sucesso")
     public void semAgendamentoSemParcelaTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(1000));
-        verificarSaldoConta(2L,  new BigDecimal(5000));
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
-        dto.setContaDestino("746183");
-        dto.setContaId(1L);
+        dto.setContaDestino("29783");
+        dto.setContaId(4L);
         dto.setValor(new BigDecimal(200));
 
         mockMvc.perform(post("/transferencia")
@@ -50,8 +50,8 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
     }
 
@@ -59,11 +59,11 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     @Order(2)
     @DisplayName("Deve retorna erro ao tenta transferir, conta retirada nao existe")
     public void semDataSemParcelaErroContaRetiradaTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
-        dto.setContaDestino("746183");
+        dto.setContaDestino("29783");
         dto.setContaId(197L);
         dto.setValor(new BigDecimal(200));
 
@@ -74,19 +74,19 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
     }
 
     @Test
     @Order(3)
     @DisplayName("Deve retorna erro ao tenta transferir, conta deposito nao existe")
     public void semDataSemParcelaErroContaDepositoTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
         dto.setContaDestino("987123");
-        dto.setContaId(1L);
+        dto.setContaId(4L);
         dto.setValor(new BigDecimal(200));
 
         mockMvc.perform(post("/transferencia")
@@ -96,11 +96,35 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        verificarSaldoConta(1L,  new BigDecimal(800));
+        verificarSaldoConta(4L,  new BigDecimal(800));
     }
 
     @Test
     @Order(4)
+    @DisplayName("Nao deve realizar transferencia entre contas, contas iguais")
+    public void semAgendamentoSemParcelaContasIguaisTest() throws Exception {
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
+
+        TransferenciaInputDTO dto = new TransferenciaInputDTO();
+        dto.setContaDestino("29783");
+        dto.setContaId(5L);
+        dto.setValor(new BigDecimal(200));
+
+        mockMvc.perform(post("/transferencia")
+                .content(json(dto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(payloadExtractor)
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
+
+    }
+
+    @Test
+    @Order(5)
     @DisplayName("Deve retorna uma transferencia")
     public void buscarPorIdTest() throws Exception {
 
@@ -115,8 +139,8 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
         assertEquals(dto.getId(), 1L);
         assertEquals(dto.getValorPago(), new BigDecimal(200));
         assertEquals(dto.getValorTotal(), new BigDecimal(200));
-        assertEquals(dto.getConta(), "57891");
-        assertEquals(dto.getContaDestino(), "746183");
+        assertEquals(dto.getConta(), "97486");
+        assertEquals(dto.getContaDestino(), "29783");
         assertEquals(dto.getStatus(), StatusTransferenciaEnum.FINALIZADO.toString());
         assertEquals(dto.getParcelas().size(), 1);
         assertEquals(dto.getDataCriacao().toLocalDate(), LocalDate.now());
@@ -125,7 +149,7 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @DisplayName("Deve retorna um erro ao buscar transferencia que nao existe")
     public void buscarPorIdErroTest() throws Exception {
 
@@ -137,15 +161,15 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @DisplayName("Deve realizar transferencia parcelada entre contas com sucesso")
     public void semAgendamentoComParcelaTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
-        dto.setContaDestino("746183");
-        dto.setContaId(1L);
+        dto.setContaDestino("29783");
+        dto.setContaId(4L);
         dto.setValor(new BigDecimal(200));
         dto.setParcelas(4);
 
@@ -156,8 +180,8 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         mockMvc.perform(get("/transferencia/2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -174,15 +198,15 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     @DisplayName("Deve realizar transferencia parcelada e com data de agendamento entre contas com sucesso")
     public void comAgendamentoComParcelaTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
-        dto.setContaDestino("746183");
-        dto.setContaId(1L);
+        dto.setContaDestino("29783");
+        dto.setContaId(4L);
         dto.setValor(new BigDecimal(200));
         dto.setParcelas(4);
         dto.setDataAgendada(LocalDate.now().plusMonths(5));
@@ -194,8 +218,8 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         mockMvc.perform(get("/transferencia/3")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -212,15 +236,15 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     @DisplayName("Nao deve realizar transferencia parcelada e com data de agendamento entre contas")
     public void comAgendamentoComParcelaErroTest() throws Exception {
-        verificarSaldoConta(1L,  new BigDecimal(800));
-        verificarSaldoConta(2L,  new BigDecimal(5200));
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
 
         TransferenciaInputDTO dto = new TransferenciaInputDTO();
-        dto.setContaDestino("746183");
-        dto.setContaId(1L);
+        dto.setContaDestino("29783");
+        dto.setContaId(4L);
         dto.setValor(new BigDecimal(200));
         dto.setParcelas(4);
         dto.setDataAgendada(LocalDate.now().minusMonths(5));
@@ -235,4 +259,75 @@ public class TransferenciaControllerTest extends AbstractControllerTest{
 
     }
 
+    @Test
+    @Order(10)
+    @DisplayName("Deve realizar reembolso de uma transferencia com sucesso")
+    public void realizarReembolsoTest() throws Exception {
+        verificarSaldoConta(4L,  new BigDecimal(800));
+        verificarSaldoConta(5L,  new BigDecimal(5200));
+
+        mockMvc.perform(post("/transferencia/1/reembolsar")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(payloadExtractor)
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
+
+        mockMvc.perform(get("/transferencia/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(payloadExtractor)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        TransferenciaDTO dto = payloadExtractor.as(TransferenciaDTO.class);
+
+        assertEquals(dto.getId(), 1L);
+        assertEquals(dto.getConta(), "97486");
+        assertEquals(dto.getContaDestino(), "29783");
+        assertEquals(dto.getStatus(), StatusTransferenciaEnum.CANCELADO.toString());
+        assertEquals(dto.getParcelas().size(), 1);
+        assertNotNull(dto.getNumeroTransacao());
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Nao deve realizar transferencia falta campos obrigatorios")
+    public void erroTransferirFaltaDadosTest() throws Exception {
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
+
+        TransferenciaInputDTO dto = new TransferenciaInputDTO();
+        dto.setValor(new BigDecimal(200));
+
+        mockMvc.perform(post("/transferencia")
+                .content(json(dto))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(payloadExtractor)
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
+
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Nao deve realizar transferencia falta campos obrigatorios")
+    public void erroTransferirBodyNaoInformadoTest() throws Exception {
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
+
+        mockMvc.perform(post("/transferencia")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(payloadExtractor)
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        verificarSaldoConta(4L,  new BigDecimal(1000));
+        verificarSaldoConta(5L,  new BigDecimal(5000));
+
+    }
 }

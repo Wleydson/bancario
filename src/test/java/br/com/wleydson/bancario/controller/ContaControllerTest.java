@@ -29,7 +29,7 @@ public class ContaControllerTest extends AbstractControllerTest{
                 .andReturn();
 
         List<ContaDTO> contas = payloadExtractor.asListOf(ContaDTO.class);
-        assertEquals(contas.size(), 2);
+        assertEquals(contas.size(), 4);
     }
 
     @Test
@@ -190,7 +190,7 @@ public class ContaControllerTest extends AbstractControllerTest{
                 .andReturn();
 
         ContaDTO conta = payloadExtractor.as(ContaDTO.class);
-        assertEquals(conta.getId(), 4);
+        assertEquals(conta.getId(), 6);
         assertEquals(conta.getConta(), "123456");
         assertEquals(conta.getDataCriacao().toLocalDate(), LocalDate.now());
     }

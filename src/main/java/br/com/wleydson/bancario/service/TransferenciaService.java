@@ -48,6 +48,9 @@ public class TransferenciaService {
 
     @Transactional
     public void transferir(Conta conta, Conta contaDestino, Transferencia transferencia) {
+        if(conta.getId().equals(contaDestino.getId())){
+            throw new TransferenciaException(messageHelper.getMensagem("conta.igual.conta.destino"));
+        }
         transferencia.setNumeroTransacao(UUID.randomUUID().toString());
         transferencia.setConta(conta);
         transferencia.setStatus(getStatus(transferencia));
