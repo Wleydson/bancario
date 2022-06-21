@@ -38,3 +38,5 @@ Link: http://localhost:8080/swagger-ui/index.html
 - Utilizado Jacoco para medir a cobertura.
 ![image](https://user-images.githubusercontent.com/25377765/174815190-481864ea-d750-4f55-8861-8ebc84c29256.png)
 
+## Insomnia
+Colletion do Insomnia contento os endpoins da api está no projeto.
